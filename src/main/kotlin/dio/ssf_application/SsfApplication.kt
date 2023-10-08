@@ -9,5 +9,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 class SsfApplication
 
 fun main(args: Array<String>) {
-	runApplication<SsfApplication>(*args)
+  runApplication<SsfApplication>(*args)
 }
+

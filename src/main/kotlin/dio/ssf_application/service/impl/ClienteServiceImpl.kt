@@ -1,10 +1,11 @@
-package service.impl
+package dio.ssf_application.service.impl
 
-import model.Cliente
-import service.ClienteService
+import dio.ssf_application.model.Cliente
+import org.springframework.stereotype.Service
+import dio.ssf_application.service.ClienteService
 
-abstract class ClienteServiceImpl : ClienteService {
-
+@Service
+class ClienteServiceImpl() : ClienteService {
 
   override fun findAll(): Iterable<Cliente> {
     return TODO()

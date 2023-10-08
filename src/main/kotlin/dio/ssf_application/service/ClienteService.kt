@@ -1,6 +1,6 @@
-package service
+package dio.ssf_application.service
 
-import model.Cliente
+import dio.ssf_application.model.Cliente
 
 interface ClienteService {
 

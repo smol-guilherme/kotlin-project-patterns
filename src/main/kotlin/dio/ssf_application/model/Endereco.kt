@@ -1,8 +1,10 @@
-package model
+package dio.ssf_application.model
 
 import jakarta.annotation.Nullable
+import jakarta.persistence.Entity
 import jakarta.persistence.Id
 
+@Entity
 class Endereco(
   @Id
   val cep: String,
