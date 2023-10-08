@@ -2,7 +2,7 @@ package dio.ssf_application.model
 
 import jakarta.annotation.Nullable
 import jakarta.persistence.Entity
-import org.springframework.data.annotation.Id
+import jakarta.persistence.Id
 
 @Entity
 data class Address(

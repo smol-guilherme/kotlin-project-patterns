@@ -22,6 +22,7 @@ class ClientServiceImplementation(
   }
 
   override fun add(cli: Client) {
+    if(cli.nome.isBlank()) throw IllegalArgumentException("nome (name) field required")
     saveClientWithAddress(cli)
   }
 
@@ -41,13 +42,18 @@ class ClientServiceImplementation(
   }
 
   private fun saveClientWithAddress(cli: Client) {
-    val cep: String = cli.endereco.cep
-    val address = addresses.findById(cep).orElseGet {
-      val newAddress: Address = viaCep.enquiryCep(cep)
-      addresses.save(newAddress)
-      return@orElseGet newAddress
+    try {
+      val cep: String = cli.endereco.cep
+      if(cep.isBlank()) throw IllegalArgumentException()
+      val address = addresses.findById(cep).orElseGet {
+        val newAddress: Address = viaCep.enquiryCep(cep)
+        addresses.save(newAddress)
+        return@orElseGet newAddress
+      }
+      cli.endereco = address
+      repository.save(cli)
+    } catch (e: IllegalArgumentException) {
+      println("CEP required")
     }
-    cli.endereco = address
-    repository.save(cli)
   }
 }

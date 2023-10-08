@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.Optional
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/clients")
 class ClientRestController(
   @Autowired
   private val service: ClientServiceImplementation

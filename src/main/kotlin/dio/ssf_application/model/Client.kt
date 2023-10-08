@@ -1,7 +1,6 @@
 package dio.ssf_application.model
 
 import jakarta.persistence.*
-import org.springframework.data.annotation.Id
 
 @Entity
 data class Client(
