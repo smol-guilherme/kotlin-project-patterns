@@ -1,6 +1,6 @@
 package dio.ssf_application.controller
 
-import dio.ssf_application.model.Cliente
+import dio.ssf_application.model.Client
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,37 +10,41 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import dio.ssf_application.service.impl.ClienteServiceImpl
+import dio.ssf_application.service.impl.ClientServiceImplementation
+import org.springframework.beans.factory.annotation.Autowired
+import java.util.Optional
 
 @RestController
 @RequestMapping("/clientes")
-class ClienteRestController() {
-  private val service: ClienteServiceImpl = ClienteServiceImpl()
+class ClientRestController(
+  @Autowired
+  private val service: ClientServiceImplementation
+) {
 
   @GetMapping
-  fun buscarTodos(): ResponseEntity<Iterable<Cliente>> {
+  fun findAll(): ResponseEntity<Iterable<Client>> {
     return ResponseEntity.ok(service.findAll())
   }
 
   @GetMapping("/{id}")
-  fun buscarPorId(id: Long): ResponseEntity<Cliente> {
+  fun findById(id: Long): ResponseEntity<Optional<Client>> {
     return ResponseEntity.ok(service.findById(id))
   }
 
   @PostMapping
-  fun inserir(@RequestBody novo: Cliente): ResponseEntity<Cliente> {
-    service.add(novo)
-    return ResponseEntity.ok(novo)
+  fun insert(@RequestBody newCli: Client): ResponseEntity<Client> {
+    service.add(newCli)
+    return ResponseEntity.ok(newCli)
   }
 
   @PutMapping("/{id}")
-  fun atualizar(@PathVariable id: Long, @RequestBody cliente: Cliente): ResponseEntity<Cliente> {
-    service.update(id, cliente)
-    return ResponseEntity.ok(cliente)
+  fun update(@PathVariable id: Long, @RequestBody client: Client): ResponseEntity<Client> {
+    service.update(id, client)
+    return ResponseEntity.ok(client)
   }
 
   @DeleteMapping("/{id}")
-  fun deletar(@PathVariable id: Long): ResponseEntity<Void> {
+  fun removeById(@PathVariable id: Long): ResponseEntity<Void> {
     service.delete(id)
     return ResponseEntity.ok().build()
   }

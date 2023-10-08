@@ -1,6 +1,6 @@
 package dio.ssf_application.service
 
-import dio.ssf_application.model.Endereco
+import dio.ssf_application.model.Address
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.PathVariable
 interface ViaCepService {
 
   @GetMapping("/{cep}/json/")
-  fun consultarCep(@PathVariable("cep") cep: String): Endereco
+  fun enquiryCep(@PathVariable("cep") cep: String): Address
 }
