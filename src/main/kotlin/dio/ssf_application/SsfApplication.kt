@@ -11,4 +11,3 @@ class SsfApplication
 fun main(args: Array<String>) {
   runApplication<SsfApplication>(*args)
 }
-

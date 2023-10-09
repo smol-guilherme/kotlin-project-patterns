@@ -1,5 +1,6 @@
 package dio.ssf_application.service.impl
 
+import dio.ssf_application.handler.errors.InsufficientInformationException
 import dio.ssf_application.model.Client
 import dio.ssf_application.model.ClientRepository
 import dio.ssf_application.model.Address
@@ -14,7 +15,7 @@ import java.util.Optional
 class ClientServiceImplementation(
   @Autowired private val repository: ClientRepository,
   @Autowired private val addresses: AddressRepository,
-  @Autowired private val viaCep: ViaCepService,
+  @Autowired private val viaCep: ViaCepService
 ) : ClientService {
 
   override fun findAll(): Iterable<Client> {
@@ -22,7 +23,6 @@ class ClientServiceImplementation(
   }
 
   override fun add(cli: Client) {
-    if(cli.nome.isBlank()) throw IllegalArgumentException("nome (name) field required")
     saveClientWithAddress(cli)
   }
 
@@ -42,18 +42,24 @@ class ClientServiceImplementation(
   }
 
   private fun saveClientWithAddress(cli: Client) {
-    try {
-      val cep: String = cli.endereco.cep
-      if(cep.isBlank()) throw IllegalArgumentException()
-      val address = addresses.findById(cep).orElseGet {
-        val newAddress: Address = viaCep.enquiryCep(cep)
-        addresses.save(newAddress)
-        return@orElseGet newAddress
-      }
-      cli.endereco = address
-      repository.save(cli)
-    } catch (e: IllegalArgumentException) {
-      println("CEP required")
+    validate(cli)
+    val cep: String = cli.endereco.cep
+    val address = addresses.findById(cep).orElseGet {
+      val newAddress: Address = viaCep.enquiryCep(cep)
+      addresses.save(newAddress)
+      return@orElseGet newAddress
     }
+    cli.endereco = address
+    repository.save(cli)
+  }
+
+  private fun validate(data: Client) {
+    val nameRegex = Regex("^((\\w+\\s\\w+)\\D+)\$")
+    val cepRegex = Regex("(^\\d{8}$)|(^\\d{5}-\\d{3}$)")
+    val cep: String = data.endereco.cep
+    if(cep.isBlank()) throw IllegalArgumentException("CEP")
+    if(data.nome.isBlank()) throw IllegalArgumentException("nome (name)")
+    if(!cep.matches(cepRegex)) throw InsufficientInformationException("CEP")
+    if(!data.nome.matches(nameRegex)) throw InsufficientInformationException("nome (name)")
   }
 }

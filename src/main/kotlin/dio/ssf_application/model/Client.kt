@@ -1,6 +1,7 @@
 package dio.ssf_application.model
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.Pattern
 
 @Entity
 data class Client(
