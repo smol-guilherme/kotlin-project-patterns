@@ -12,6 +12,7 @@ import dio.ssf_application.service.impl.ClientServiceImplementation
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
@@ -25,15 +26,17 @@ internal class ClientServiceTests() {
   @MockkBean
   private lateinit var repository: ClientRepository
 
-  @MockK
+  @MockkBean
   private lateinit var address: AddressRepository
 
-  @MockK
+  @MockkBean
   private lateinit var viaCep: ViaCepService
 
   @BeforeEach
   private fun startup() {
     repository = mockk<ClientRepository>()
+    address = mockk<AddressRepository>()
+    viaCep = mockk<ViaCepService>()
   }
 
   @AfterEach
@@ -69,5 +72,22 @@ internal class ClientServiceTests() {
     every { repository.findById(randomId) } returns Optional.empty()
 
     assertThrows<ClientNotFoundException> { service.findById(randomId) }
+  }
+
+  @Test
+  fun whenInsertClient_thenReturnSuccess() {
+    service = spyk(ClientServiceImplementation(repository, address, viaCep))
+    val randomId = Random.nextLong(1, 100)
+    val randomCep = Random.nextInt(90000000, 99999999).toString()
+
+    val factoredAddress = AddressFixture.address(randomCep)
+    val userCreated = ClientFixture.client(id = randomId, address = factoredAddress)
+    every { repository.save(userCreated) } returns userCreated
+    every { address.findById(randomCep) } returns Optional.of(factoredAddress)
+    service.add(userCreated)
+
+    assertAll(
+      { verify(exactly = 1) { repository.save(userCreated) } },
+    )
   }
 }
