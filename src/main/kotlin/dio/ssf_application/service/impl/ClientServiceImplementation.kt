@@ -1,5 +1,6 @@
 package dio.ssf_application.service.impl
 
+import dio.ssf_application.handler.errors.ClientNotFoundException
 import dio.ssf_application.handler.errors.InsufficientInformationException
 import dio.ssf_application.model.Client
 import dio.ssf_application.model.ClientRepository
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service
 import dio.ssf_application.service.ClientService
 import dio.ssf_application.service.ViaCepService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import java.util.Optional
 
 @Service
@@ -38,7 +40,9 @@ class ClientServiceImplementation(
   }
 
   override fun findById(id: Long): Optional<Client> {
-    return repository.findById(id)
+    val client = repository.findById(id)
+    if(client.isEmpty) throw ClientNotFoundException("Client by id $id")
+    return client
   }
 
   private fun saveClientWithAddress(cli: Client) {

@@ -1,5 +1,6 @@
 package dio.ssf_application.handler
 
+import dio.ssf_application.handler.errors.ClientNotFoundException
 import dio.ssf_application.handler.errors.InsufficientInformationException
 import feign.FeignException
 import org.springframework.http.HttpStatus
@@ -20,6 +21,12 @@ class ErrorHandler {
   fun <T: Throwable> handleInsufficientInformation(ex: T): ResponseEntity<String> {
     val msg = "Error: ${ex.message} is too short/incomplete"
     return ResponseEntity(msg, HttpStatus.UNPROCESSABLE_ENTITY)
+  }
+
+  @ExceptionHandler(ClientNotFoundException::class)
+  fun <T: Throwable> handleClientNotFound(ex: T): ResponseEntity<String> {
+    val msg = "Error: ${ex.message} not found"
+    return ResponseEntity(msg, HttpStatus.NOT_FOUND)
   }
 
   @ExceptionHandler(FeignException::class)

@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ClientRepository : CrudRepository<Client, Long> {
-
 }
