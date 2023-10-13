@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service
 import dio.ssf_application.service.ClientService
 import dio.ssf_application.service.ViaCepService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import java.util.Optional
 
 @Service
@@ -46,8 +45,8 @@ class ClientServiceImplementation(
   }
 
   private fun saveClientWithAddress(cli: Client) {
-    validate(cli)
     val cep: String = cli.endereco.cep
+    validate(cli)
     val address = addresses.findById(cep).orElseGet {
       val newAddress: Address = viaCep.enquiryCep(cep)
       addresses.save(newAddress)
@@ -62,8 +61,8 @@ class ClientServiceImplementation(
     val cepRegex = Regex("(^\\d{8}$)|(^\\d{5}-\\d{3}$)")
     val cep: String = data.endereco.cep
     if(cep.isBlank()) throw IllegalArgumentException("CEP")
-    if(data.nome.isBlank()) throw IllegalArgumentException("nome (name)")
+    if(data.nome.isBlank()) throw InsufficientInformationException("nome (name)")
     if(!cep.matches(cepRegex)) throw InsufficientInformationException("CEP")
-    if(!data.nome.matches(nameRegex)) throw InsufficientInformationException("nome (name)")
+    if(!data.nome.matches(nameRegex)) throw IllegalArgumentException("nome (name)")
   }
 }
