@@ -2,15 +2,15 @@ package dio.ssf_application.service.impl
 
 import dio.ssf_application.handler.errors.ClientNotFoundException
 import dio.ssf_application.handler.errors.InsufficientInformationException
-import dio.ssf_application.model.Client
-import dio.ssf_application.model.ClientRepository
 import dio.ssf_application.model.Address
 import dio.ssf_application.model.AddressRepository
-import org.springframework.stereotype.Service
+import dio.ssf_application.model.Client
+import dio.ssf_application.model.ClientRepository
 import dio.ssf_application.service.ClientService
 import dio.ssf_application.service.ViaCepService
 import org.springframework.beans.factory.annotation.Autowired
-import java.util.Optional
+import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ClientServiceImplementation(

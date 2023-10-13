@@ -3,7 +3,6 @@ package dio.ssf_application.model
 import jakarta.annotation.Nullable
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.validation.constraints.Pattern
 
 @Entity
 data class Address(
